@@ -1,0 +1,149 @@
+.outline{
+  border-width: 1px;
+  border-color: black;
+  border-style: solid;
+}
+
+.tile {
+  background-color: #dcdcdc;
+}
+
+.minitile {
+  background-color: #FFFFFF;
+  width: 30%;
+  height: 80%;
+}
+
+.background {
+  background-color: #f3f3f3;
+}
+
+.fontSize48 {
+  font-size: 3rem;
+}
+
+.fontSize32 {
+  font-size: 2rem;
+}
+
+.fontSize24 {
+  font-size: 1.5rem;
+}
+
+.fontSize18 {
+  font-size: 1.125rem;
+}
+
+.topAndBottomMargin {
+  margin: 15px 0px;
+}
+
+.topAndBottomPadding {
+  padding: 15px 0px;
+}
+
+.doublePadding {
+  padding: 30px 0px;
+}
+
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 20%;
+}
+
+.verticalAlignment {
+  vertical-align: middle
+}
+
+.centreAlignment {
+  vertical-align: middle;
+  text-align: center;
+}
+
+.redText {
+  color: #E01A3A;
+}
+
+.yellowText {
+  color: #F5E10D;
+}
+
+.captureButton {
+  font-size: 2rem;
+  background-color: #006747;
+  color: #F5E10D;
+}
+
+.header {
+  background-color: #171717;
+  color: #FFFFFF;
+}
+
+/* div.chart-wrapper div.expand-btn
+{
+  display:none;
+} */
+
+div.expand-btn
+{
+  display:none;
+}
+
+
+
+/* div.chart-overlay
+{
+  vertical-align: middle;
+
+} */
+
+div.legend-wrapper {
+  display:none;
+}
+
+svg.chart-svg.donut {
+  display:block;
+  margin:auto;
+  /* padding: 150px 0px; */
+  /* vertical-align: middle; */
+
+}
+
+/* g.inner-wrap {
+  margin: auto;
+
+} */
+
+.smallheader {
+  padding: 3px;
+  background: #1abc9c;2
+}
+
+.datasetCreation {
+  margin: 20px 0px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: #006747;
+  color: #fffffa;
+}
+
+.footer {
+  vertical-align: bottom;
+  text-align: center;
+  padding-top: 30px;
+  padding-bottom: 10px;
+}
+
+.whiteText {
+  color: #fffffa;
+}
+
+.letter {
+  color: yellow;
+  text-shadow: 2px 0 0;
+  box-sizing: border-box;
+  /* padding: 30px; */
+  /* border: 10px solid blue; */
+}

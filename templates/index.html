@@ -1,0 +1,160 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>PowerAI Vision Inference</title>
+
+
+    <link rel="stylesheet" href="https://unpkg.com/carbon-components/css/carbon-components.min.css" type="text/css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://unpkg.com/@carbon/charts/style.css" />
+
+    <script src="https://unpkg.com/carbon-components/scripts/carbon-components.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+    <script type="text/javascript" charset="utf-8">
+    var x =
+    $(document).ready(function(){
+
+    $('#log').text()
+    // set the namespace -
+    namespace = '/test';
+
+    // connect to the socket.io server
+    var socket = io(namespace);
+
+    // event handler for new connections
+    socket.on('connect', function() {
+                socket.emit('my_event', {data: 'I\'m connected!'});
+            });
+    // event handler for when the server sends data:
+    // data is displayed within the Recieved section of the page in the html
+    socket.on('my_response', function(msg, cb) {
+              // $('#log').text('Received #' + msg.count + ': ' + msg.data).html());
+              // $('#log').text(msg.data);
+              $('#log').text(JSON.stringify(msg.data).replace(/['"]+/g, '')).html();
+              if (cb)
+                  cb();
+          });
+});
+    </script>
+
+  </head>
+  <body>
+    <div class="background">
+    <div class="bx--grid header bx--row">
+      <h1 class="bx--col-md-8 verticalAlignment fontSize24 topAndBottomPadding">IBM x Oxford Cancer Biomarkers | ColoProg</h1>
+        </div>
+
+          <!-- <div class="bx--grid">
+            <div class="bx--row topAndBottomPadding">
+              <div class="bx--col-md-4 centreAlignment">
+          <img src="http://localhost:8002/video_feed" width="50%">
+        </div> -->
+
+<div class="bx--grid">
+  <div class="bx--row topAndBottomPadding">
+
+  </div>
+
+  <div class="bx--row wrapper ">
+    <div class="bx--col-md-4 centreAlignment tile topAndBottomPadding" id="canvasContainer">
+      <img src="http://localhost:8002/video_feed" class="topAndBottomMargin" width="80%">
+      <p >Colon tissue x 40</p>
+    </div>
+
+    <div class="bx--col-md-4 tile centreAlignment topAndBottomPadding">
+      <!-- <h2 class="topAndBottomMargin">Detected Cell Count </h2> -->
+
+      <!-- <div class="bx--row wrapper">
+      <div class="smallheader"></div>
+      <div class="minitile topAndBottomPadding">
+      <h1> Epitheleal <mark id="log"></mark></h1>
+    </div>
+      <h1 class="topAndBottomMargin"> Lymphocyte <mark id="log"></mark></h1>
+      <h1 class="topAndBottomMargin"> Fibroblast <mark id="log"></mark></h1>
+    </div> -->
+
+    <div id="my-pie-chart" class="doublePadding"></div>
+       <script src="https://unpkg.com/@carbon/charts/index.umd.js"></script>
+       <script>
+       //import { BarChart, defaultColors } from '@carbon/charts';
+       const { DonutChart, defaultColors } = Charts;
+         // grab chart holder DOM element
+         const chartHolder = document.getElementById('my-pie-chart');
+         const donutData = {
+	labels: ["Epitheleal", "Lymphocyte", "Fibroblast"],
+	datasets: [
+		{
+			label: "Dataset 1",
+			backgroundColors: ["#ee538b","#1192e8","#6929c4"],
+			data: [66, 14, 20]
+		}
+	]
+};
+
+//
+
+// const pieOptions = {
+// 	accessibility: false,
+// 	legendClickable: false,
+// 	containerResizable: true,
+// 	defaultColors,
+// 	//theme: getTheme()
+// };
+
+const donutOptions = {
+	accessibility: false,
+	legendClickable: false,
+	containerResizable: true,
+	//theme: getTheme(),
+	// defaultColors,
+  colors: ["#ee538b","#1192e8","#6929c4"],
+	center: {
+		label: "Cells",
+		number: 10
+	},
+};
+
+         // // initialize the chart
+         // new Charts.PieChart(chartHolder, {
+         //   data: pieData,
+         //   options: pieOptions,
+         //   legendClickable: false
+         // });
+
+         // initialize the chart
+         new Charts.DonutChart(chartHolder, {
+           data: donutData,
+           options: donutOptions
+         });
+
+       </script>
+
+
+
+
+    </div>
+</div>
+
+<!-- <div class="centreAlignment fontSize48 letter topAndBottomPadding">
+          <mark id="log">
+
+              <script>
+
+              // $('#log')
+              // var str = $('#log').slice(1, -1);
+              // $("#log").text(str)
+
+
+              </script>
+
+            </mark>
+              </div> -->
+
+            <!-- </div> -->
+            <div>
+              <footer class="footer fontSize24" >Running on IBM Power Systems.</footer>
+            </div>
+        </div>
+  </body>
+</html>
