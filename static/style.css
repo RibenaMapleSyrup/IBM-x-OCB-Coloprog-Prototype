@@ -8,6 +8,18 @@
   background-color: #dcdcdc;
 }
 
+.epithelial_color {
+  color: rgb(3, 83, 233);
+}
+
+.fibroblast_color {
+  color: rgb(238, 83, 139);
+}
+
+.lymphocyte_color {
+  color: rgb(105, 41, 196);
+}
+
 .minitile {
   background-color: #FFFFFF;
   width: 30%;
@@ -26,6 +38,10 @@
   font-size: 2rem;
 }
 
+.tiletext {
+font-size: 2vw;
+}
+
 .fontSize24 {
   font-size: 1.5rem;
 }
@@ -36,6 +52,11 @@
 
 .topAndBottomMargin {
   margin: 15px 0px;
+}
+
+.margin {
+  margin: auto;
+
 }
 
 .topAndBottomPadding {
@@ -66,9 +87,9 @@
   color: #E01A3A;
 }
 
-.yellowText {
+/* .yellowText {
   color: #F5E10D;
-}
+} */
 
 .captureButton {
   font-size: 2rem;
@@ -79,6 +100,23 @@
 .header {
   background-color: #171717;
   color: #FFFFFF;
+}
+
+.square {
+  position: relative;
+  width: 5%;
+}
+
+.square:after {
+  content: "";
+  display: block;
+  padding-bottom: 100%;
+}
+
+.content {
+  position: absolute;
+  width: 100%;
+  height: 100%;
 }
 
 /* div.chart-wrapper div.expand-btn
@@ -138,12 +176,4 @@ svg.chart-svg.donut {
 
 .whiteText {
   color: #fffffa;
-}
-
-.letter {
-  color: yellow;
-  text-shadow: 2px 0 0;
-  box-sizing: border-box;
-  /* padding: 30px; */
-  /* border: 10px solid blue; */
 }

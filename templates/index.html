@@ -28,12 +28,69 @@
             });
     // event handler for when the server sends data:
     // data is displayed within the Recieved section of the page in the html
+
+
+
     socket.on('my_response', function(msg, cb) {
+              var inference = [];
               // $('#log').text('Received #' + msg.count + ': ' + msg.data).html());
               // $('#log').text(msg.data);
-              $('#log').text(JSON.stringify(msg.data).replace(/['"]+/g, '')).html();
+              console.log(msg.data)
+              for (i = 0; i < msg.data.length; i++) {
+              // for each part of string:
+              if (msg.data[i]["label"] == "epithelial" && msg.data[i]["confidence"] > 0.95 ) {
+                  inference.push(msg.data[i])
+                  // if (inference.length > 4) {
+                  //   inference.splice(3,1)
+                  // }
+                  } else if ((msg.data[i]["label"] == "fibroblast" && msg.data[i]["confidence"] > 0.90)) {
+                    inference.push(msg.data[i])
+                //   if (inference.length > 4) {
+                //     inference.splice(3,1)
+                // }
+              } else if ((msg.data[i]["label"] == "lymphocyte" && msg.data[i]["confidence"] > 0.95)) {
+                inference.push(msg.data[i])
+              //   if (inference.length > 4) {
+              //     inference.splice(3,1)
+              // }
+            } else {
+              // console.log("0")
+            };
+          }
+
+          console.log(inference)
+
+              var epithelial_count = JSON.stringify(inference).match(/epithelial/g || [])
+              if (!epithelial_count) {
+                $('#epithelial').text(0).html();
+              }
+              else {
+                $('#epithelial').text((JSON.stringify(inference).match(/epithelial/g || [])).length).html();
+                console.log((JSON.stringify(inference).match(/epithelial/g || [])).length)
+              }
+
+              var fibroblast_count = JSON.stringify(inference).match(/fibroblast/g || [])
+              if (!fibroblast_count) {
+                $('#fibroblast').text(0).html();
+              }
+              else {
+                $('#fibroblast').text((JSON.stringify(inference).match(/fibroblast/g || [])).length).html();
+              }
+
+              var lymphocyte_count = JSON.stringify(inference).match(/lymphocyte/g || [])
+              if (!lymphocyte_count) {
+                $('#lymphocyte').text(0).html();
+              }
+              else {
+                $('#lymphocyte').text((JSON.stringify(inference).match(/lymphocyte/g || [])).length).html();
+                console.log((JSON.stringify(inference).match(/lymphocyte/g || [])).length)
+              }
+
+
               if (cb)
                   cb();
+                  //  var str = $('#log').match(/epithelial/g || []).length;
+                  //  $("#log").text(str)
           });
 });
     </script>
@@ -62,9 +119,25 @@
       <p >Colon tissue x 40</p>
     </div>
 
-    <div class="bx--col-md-4 tile centreAlignment topAndBottomPadding">
-      <!-- <h2 class="topAndBottomMargin">Detected Cell Count </h2> -->
+    <!-- <div class="bx--col-md-4 tile topAndBottomPadding"> -->
 
+
+
+    <div class="bx--row margin">
+
+      <a data-tile="clickable" class="bx--tile tile centreAlignment doublePadding" tabindex="0">
+        <div class="topAndBottomMargin fontSize24 centreAlignment">Epitheleal <h2 class"doublePadding topAndBottomMargin fontSize48 epithelial_color" id="epithelial">
+        </h2> </div>
+      </a>
+      <a data-tile="clickable" class="bx--tile tile centreAlignment doublePadding" tabindex="0">
+        <div class="topAndBottomMargin fontSize24 centreAlignment">Fibroblast <h2 class"doublePadding topAndBottomMargin fontSize48 fibroblast_color" id="fibroblast">
+        </h2> </div>
+      </a>
+      <a data-tile="clickable" class="bx--tile tile centreAlignment doublePadding" tabindex="0">
+        <div class="topAndBottomMargin fontSize24 centreAlignment">Lymphocyte <h2 class"doublePadding topAndBottomMargin fontSize48 lymphocyte_color" id="lymphocyte">
+        </h2> </div>
+      </a>
+    </div>
       <!-- <div class="bx--row wrapper">
       <div class="smallheader"></div>
       <div class="minitile topAndBottomPadding">
@@ -74,10 +147,10 @@
       <h1 class="topAndBottomMargin"> Fibroblast <mark id="log"></mark></h1>
     </div> -->
 
-    <div id="my-pie-chart" class="doublePadding"></div>
-       <script src="https://unpkg.com/@carbon/charts/index.umd.js"></script>
-       <script>
-       //import { BarChart, defaultColors } from '@carbon/charts';
+    <!-- <div id="my-pie-chart" class="doublePadding"></div> -->
+       <!-- <script src="https://unpkg.com/@carbon/charts/index.umd.js"></script> -->
+       <!-- <script>
+       import { DonutChart, defaultColors } from '@carbon/charts';
        const { DonutChart, defaultColors } = Charts;
          // grab chart holder DOM element
          const chartHolder = document.getElementById('my-pie-chart');
@@ -87,7 +160,7 @@
 		{
 			label: "Dataset 1",
 			backgroundColors: ["#ee538b","#1192e8","#6929c4"],
-			data: [66, 14, 20]
+			data: [20, 30, 50]
 		}
 	]
 };
@@ -128,28 +201,18 @@ const donutOptions = {
            options: donutOptions
          });
 
-       </script>
+       </script> -->
 
 
 
 
-    </div>
+    <!-- </div> -->
 </div>
 
-<!-- <div class="centreAlignment fontSize48 letter topAndBottomPadding">
+<div class="centreAlignment fontSize48 topAndBottomPadding">
           <mark id="log">
-
-              <script>
-
-              // $('#log')
-              // var str = $('#log').slice(1, -1);
-              // $("#log").text(str)
-
-
-              </script>
-
             </mark>
-              </div> -->
+              </div>
 
             <!-- </div> -->
             <div>

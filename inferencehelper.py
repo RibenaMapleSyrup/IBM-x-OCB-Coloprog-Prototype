@@ -19,7 +19,7 @@ logger = logging.getLogger("InferenceHelper")
 #not shippable - from https://www.pyimagesearch.com/2015/12/21/increasing-webcam-fps-with-python-and-opencv/
 
 # common items for PowerAI Vision
-POWERAI_BASEURL = "http://9.196.150.55:8008/inference"
+POWERAI_BASEURL = "http://9.196.150.55:8006/inference"
 
 # TODO: Should figure out how to generate a CSRF token for PAIV endpoint
 # cookiejar = {'x-auth-token': '6d047c1d-f056-4af3-9c83-f6906e570c30',
@@ -28,8 +28,8 @@ POWERAI_BASEURL = "http://9.196.150.55:8008/inference"
 
 class InferenceHelper:
     """
-    This helper class queues frames from the webcam thread, and sends them to the 
-    PAIV backend to be classified. 
+    This helper class queues frames from the webcam thread, and sends them to the
+    PAIV backend to be classified.
     """
 
     def __init__(self, API_ID):
@@ -61,7 +61,7 @@ class InferenceHelper:
 
     def infer_image(self, frame):
         """
-        Send a frame for inference at the backend. 
+        Send a frame for inference at the backend.
         """
         endpoint = POWERAI_BASEURL + self.API_ID
         file = open(frame, 'rb')
@@ -85,11 +85,11 @@ class InferenceHelper:
 
                 if 'classified' in resp_value.keys():
                     objs = resp_value['classified']
-            
+
             except Exception as e:
                 logger.exception("Caught exception during inference API call.")
                 pass
-        
+
         if objs is None:
             objs = []
 
@@ -123,7 +123,7 @@ class InferenceHelper:
                     frame_data['json_resp'] = json_resp
                     frame_data['type'] = 'inference_done' #this makes it officially ready for processing
                     logger.debug(f"NEW INFERENCE FOR FRAME {frame_data['name']}, status code = {status_code}, json = \"{json_resp}\"")
-                    
+
                     # Set the json_resp parameter which will be used to draw on the frames in the main thread.
                     self.json_resp = json_resp
 
