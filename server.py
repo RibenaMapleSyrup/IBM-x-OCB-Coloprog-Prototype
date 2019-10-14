@@ -15,10 +15,27 @@ from queue import Queue
 import cv2
 from flask_socketio import SocketIO, emit
 
+
+
 def similarity_factor(sim_list):
 	sim_np = np.subtract(sim_list[0],sim_list[1])
 	sim_np = np.absolute(sim_np)
 	return np.mean(sim_np)
+
+def threshold(sim_thresh_list):
+	'''This functions is to calculate the similarity threshold'''
+	for k in range(32):
+		if k > 1:
+			frame = webcam_thread.read()
+			sim_thresh_list.append(frame)
+			time.sleep(0.2)
+			similarity = similarity_factor(sim_thresh_list)
+			sim_bucket.append(similarity)
+			del sim_thresh_list[0]
+	
+	sim_mean = np.mean(np.asarray(sim_bucket))
+	sim_std = np.std(sim_bucket)
+	return sim_mean + 1.75*sim_std
 
 def save_file(frame):
 	cv2.iwrite()
@@ -67,20 +84,20 @@ def index():
 # def test_disconnect():
 #     print('Client disconnected')
 
-logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger("Server")
+# logging.basicConfig(level=logging.DEBUG)
+# logger = logging.getLogger("Server")
 
 # Spawning the relevant threads
-logger.info("Starting webcam thread")
+#logger.info("Starting webcam thread")
 # webcam_thread = WebcamVideoStream(src=0).start()
 webcam_thread = WebcamVideoStream(src=1).start()
 fps = FPS().start()
 
-logger.info("Starting inference thread")
+#logger.info("Starting inference thread")
 INFERENCE_API = ""
 inference_thread = InferenceHelper(INFERENCE_API).start()
 
-logger.info("Starting drawing thread")
+#logger.info("Starting drawing thread")
 drawing_thread = DrawingHelper(webcam_thread.VID_WIDTH, webcam_thread.VID_HEIGHT).start()
 
 # Run until quit.
@@ -92,6 +109,13 @@ frame_name = "./output/frame{}.jpg".format(fps.current_frame_number())
 similarity_list = [frame]
 
 
+"""Need to be tested"""
+sim_bucket = []
+sim_thresh_list = [frame]
+sim_threshold = threshold(sim_thresh_list)
+print("threshold: ", sim_threshold)
+
+
 # Everytime the inference thread processes a frame it returns the json_resp
 # This then adds the frame and json_resp to the drawing thread queue.
 
@@ -100,7 +124,6 @@ if inference_thread.queue.empty():
 
 drawing_thread.enqueue({'frame': frame, 'json_resp': inference_thread.json_resp})
 drawn_frame, json_resp = drawing_thread.update()
-i = 0
 
 def detect_motion():
 	# grab global references to the output frame
@@ -109,30 +132,22 @@ def detect_motion():
     global frame_name
     global frame
     global json_resp
-    i=0
 
     while True:
 
-        i+=1
         frame = webcam_thread.read()
         frame_name = "./output/frame{}.jpg".format(fps.current_frame_number())
         similarity_list.append(frame)
-
         time.sleep(0.2)
-
         similarity = similarity_factor(similarity_list)
+
     	#print(fps.current_frame_number(), similarity)
     	# cv2.imwrite(frame_name, frame)
-
-    	# if similarity > 60 & i > 50:
-    	# 	#print("similarity", similarity)
-    	# 	print("Frame", fps.current_frame_number())
-    	# 	break
 
         del similarity_list[0]
         print(similarity)
 
-        if similarity < 93: # Check if image is stable.
+        if similarity < sim_threshold: # Check if image is stable.
 
             drawn_frame = drawing_thread.draw_bounding_box(json_resp, frame) #return new json_resp and pass to websocket
             new_frame = cv2.resize(drawn_frame, (1285, 690))
@@ -159,7 +174,7 @@ def detect_motion():
             drawn_frame, json_resp = drawing_thread.update()
             frame_data = inference_thread.json_resp
             # logger.info("here")
-            logger.info(frame_data.count('epithelial'))
+            #logger.info(frame_data.count('epithelial'))
 
         fps.update()
 
@@ -169,14 +184,14 @@ def generate():
 		#logger.info("wow")
 		if drawn_frame is None:
 			continue
-			logger.info("nothing")
+			#logger.info("nothing")
 			# encode the frame in JPEG format
 		(flag, encodedImage) = cv2.imencode(".jpg", drawn_frame)
 
 			# ensure the frame was successfully encoded
 		if not flag:
 			continue
-			logger.info("something")
+			#logger.info("something")
 
 		# yield the output frame in the byte format
 		yield(b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' +
@@ -194,7 +209,7 @@ if __name__ == '__main__':
 
 	t = threading.Thread(target=detect_motion,)
 	t.daemon = True
-	logger.info("started draw thread")
+	#logger.info("started draw thread")
 	t.start()
 	app.run(host="0.0.0.0", port="8002", debug=True, threaded=True, use_reloader=False)
 	# socketio.run(app, host="0.0.0.0", port="8001")
